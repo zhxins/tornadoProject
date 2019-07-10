@@ -10,8 +10,9 @@ settings = {
     "static_path": os.path.join(BASE_DIRS, "static"),
     "template_path": os.path.join(BASE_DIRS, "templates"),
     # "debug": True,
-    "autoreload": True
-
+    "autoreload": False,
+    # 关闭当前项目的自动转义，一般不建义使用
+    # "autoescape": None
 
 }
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {{str}}
+
+    <!--关闭单行转义功能-->
+    {% raw str %}
+    <!--关闭单行转义功能-->
+
+    <!--关闭当前页面的自动转义-->
+    {% autoescape None %}
+
+        <!--escape(),在关闭自动转义后，对特定变量进行转义-->
+        <!--{{escape(str)}}-->
+
+    <!--关闭当前页面的自动转义-->
+
+</body>
+</html>
