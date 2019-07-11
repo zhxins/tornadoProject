@@ -3,6 +3,9 @@ from tornado.web import RequestHandler
 import json
 import os
 import config
+# from mysqlUtil import MySQLUtil
+import MySQLdb as mdb
+
 
 
 # 视图
@@ -197,3 +200,50 @@ class TransHandler(RequestHandler):
 class ChildHandler(RequestHandler):
     def get(self):
         self.render("child.html", title="child page")
+
+
+class StudentsHandler(RequestHandler):
+
+    def get(self):
+        # 从数据库中读取数据
+        # tornado 没有自带的ORM，对于数据库需要自己去适配
+        # 目前python3.6 + tornado还没有比较完善的驱动
+        stus = self.application.db.get_all("select * from student")
+        print(stus)
+
+        # tup = (('1', 'jia', 11), ('2', 'rui', 25), ('3', 'fen', 39), ('4', 'koe', 45))
+        # for item in tup:
+        #     for t in item:
+        #         print(t, end=' ')
+        #     print()
+
+        self.write("query ok")
+        # self.render("students.html", stus = stus)
+
+
+class CCookieHandler(RequestHandler):
+    def get(self):
+        # self.set_cookie(name, value, domain=None, expires=None, path="/", expires_days=1)
+        # name: cookie名
+        # value: cookie值
+        # domain:提交cookie时匹配的域名
+        # expires: cookie的有效期，可以是时间戳，时间元组，datatime类型
+        # path: 提交cookie时匹配的路径
+        # expires_day: cookie有效期天数，优先级小于expries
+        self.set_cookie("hello", "world")
+        self.write("cookie ok")
+
+
+class getCCookieHandler(RequestHandler):
+    def get(self):
+        # 获取cookie，如果名为hello的cookie不存在，则返回default的值
+        cookie = self.get_cookie("hello", default="未登录")
+
+        # 清除cookie
+        self.clear_cookie(name="", path="/", domain=None)
+        print(cookie)
+
+        # 清除所有cookie
+        # self.clear_all_cookies()
+
+        self.write("getCookie ok")
