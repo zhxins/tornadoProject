@@ -247,3 +247,66 @@ class getCCookieHandler(RequestHandler):
         # self.clear_all_cookies()
 
         self.write("getCookie ok")
+
+
+class getSCookieHandler(RequestHandler):
+    def get(self):
+        # 设置一个带有签名和时间戳的cookie,防止cookie被伪造
+        # self.set_secure_cookie(name="", value="", expires_days=30, version=None, **kwargs)
+        self.set_secure_cookie(name="secname", value="secret very good")
+
+        # 获取安全cookie, 如果没取到name的值，则取value的值，max_age_days, 过滤安全cookie的时间戳，默认比设置的多一天
+        # self.get_secure_cookie(name="", value="", max_age_days=31, min_version=None)
+        # 也不是完全安全的，一定程度上增加了破解cookie的难度，
+        # self.get_secure_cookie(name="", value="", max_age_days=31, min_version=None)
+        self.get_secure_cookie(name="secname")
+
+
+        self.write("secret cookie ok")
+
+
+class CookieCountHandler(RequestHandler):
+    def prepare(self):
+        pass
+
+    def get(self):
+        count = self.get_cookie("count", None)
+        if count:
+            count = int(count)
+            count += 1
+        else:
+            count = 1
+        self.set_cookie("count", str(count))
+        self.render("cookiecount.html", count=count)
+
+    # 原来的get请求不安全，改为post即可
+    # 表单提交，修改cookid
+    def post(self):
+        # 设置xsrf cookie
+        self.xsrf_token
+        pass
+
+
+class LoginNewHandler(RequestHandler):
+    def get(self):
+        self.render("login.html")
+
+    def post(self):
+        name = self.get_body_argument("username")
+        pwd = self.get_body_argument("pwd")
+
+        if name == "1" and pwd == "1":
+            self.redirect("home.html?flag=logined")
+            print("ads", name, pwd)
+        else:
+            self.redirect("login.html?flag=logined")
+
+
+class HomeNewHandler(RequestHandler):
+    def get_current_user(self):
+        flag = self.get_arguments("flag", None)
+        return flag
+
+    @tornado.web.authenticated
+    def get(self):
+        self.render("homeNew.html")

@@ -51,10 +51,15 @@ class Application(tornado.web.Application):
             # 获取cookie
             (r'/getCCookie', index.getCCookieHandler),
 
+            # 安全cookie
+            (r'/getSCookie', index.getSCookieHandler),
 
+            # cookie 计数,记录浏览器访问次数
+            (r'/cookieCount', index.CookieCountHandler),
 
+            (r'/homeNew', index.HomeNewHandler),
 
-
+            (r'/loginNew', index.LoginNewHandler),
 
 
 

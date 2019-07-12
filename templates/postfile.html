@@ -6,13 +6,18 @@
 </head>
 <body>
     <form action="/postfile" method="post">
+
+        <!--当前模板关闭同源保护 -->
+        <!--1、为浏览器设置一个xsrf的安全cookie-->
+        <!--2、为模板表单添加了一个隐藏域，名为xsrf,值为这个cookie-->
+        {% module xsrf_form_html() %}
         姓名：<input type="text" name="username" /><hr/>
         密码：<input type="password" name="password"> <hr>
 
-        爱好：
+        <!--爱好：
             <input type="checkbox" value="power" name="hobby">权利
             <input type="checkbox" value="money" name="hobby">金钱
-            <input type="checkbox" value="book" name="hobby">书
+            <input type="checkbox" value="book" name="hobby">书-->
 
         <input type="submit" value="登录">
 

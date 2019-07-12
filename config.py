@@ -22,6 +22,10 @@ settings = {
     # 关闭当前项目的自动转义，一般不建义使用
     # "autoescape": None
     # 配置安全cookie密钥
-    "cookie_secret": "inQb079+S+G6DsyTZn2GbQIQ0/7zTEUrpt4uf8+MozA="
+    "cookie_secret": "inQb079+S+G6DsyTZn2GbQIQ0/7zTEUrpt4uf8+MozA=",
+    # 开启同源保护
+    "xsrf_cookies": True,
+    # 如果 authenticated验证失败，则跳转到下页面
+    "login_url": "/home",
 }
 

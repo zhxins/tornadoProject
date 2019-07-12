@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+    <!--<link rel="stylesheet" href="/static/css/home.css">-->
+    <!--如果用下面这种方式，则无论项目下static目录名称如何改变则下面href均不需要动-->
+    <!--static_url() 获取静态目录，并将新的参数拼接到静态目录后返回新的路径，末尾带有哈希值
+      这个哈希值总能保证加载的都是最新的文件，而不是之前的缓存版本，不论是开发阶段还是生产阶段
+      都是很有必要的 -->
+    <link rel="stylesheet" href="{{static_url('css/home.css')}}">
+</head>
+<body>
+    <h1>title</h1>
+
+    <!--页面取值用-->
+
+</body>
+</html>
