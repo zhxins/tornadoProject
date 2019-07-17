@@ -5,6 +5,8 @@ import os
 import config
 # from mysqlUtil import MySQLUtil
 import MySQLdb as mdb
+from tornado.httpclient import AsyncHTTPClient
+from tornado.websocket import WebSocketHandler
 
 
 
@@ -310,3 +312,113 @@ class HomeNewHandler(RequestHandler):
     @tornado.web.authenticated
     def get(self):
         self.render("homeNew.html")
+
+
+# 回调异步
+class LaoMianHandler(RequestHandler):
+    def on_response(self, response):
+        if response.error:
+            self.send_error(500)
+        else:
+            # 转换成json串
+            data = json.loads(response.body)
+            self.write(data)
+        self.finish()
+
+    # @tornado.web.asynchronous    # 不关闭通信通道
+    def get(self):
+        # 创建客户端
+
+        client = AsyncHTTPClient()
+        url = "http://s.budejie.com/topic/tag-topic/64/hot/budejie-android-"
+        client.fetch(url, self.on_response)
+
+
+# 协程异步
+class YangrouHandler(RequestHandler):
+    def on_response(self, response):
+        if response.error:
+            self.send_error(500)
+        else:
+            # 转换成json串
+            data = json.loads(response.body)
+            self.write(data)
+        self.finish()
+
+
+    @tornado.gen.coroutine
+    def get(self):
+        # 创建客户端
+
+        client = AsyncHTTPClient()
+        url = "http://s.budejie.com/topic/tag-topic/64/hot/budejie-android-"
+        res = yield client.fetch(url)
+        if res.error:
+            self.send_error(500)
+        else:
+            data = json.loads(res.body)
+            self.write(data)
+
+
+# 针对以上方法做出的优化改进操作
+class KaojiHandler(RequestHandler):
+
+    @tornado.gen.coroutine
+    def get(self):
+        res = yield self.getData()
+        self.write(res)
+
+    @tornado.gen.coroutine
+    def getData(self):
+        client = AsyncHTTPClient()
+        url = "http://s.budejie.com/topic/tag-topic/64/hot/budejie-android-"
+        res = yield client.fetch(url)
+
+        raise tornado.gen.Return(res)   # 把数据返回
+
+
+class ChatInitHandler(RequestHandler):
+    def get(self):
+        self.render("chat1.html")
+
+
+class ChatHandler(WebSocketHandler):
+
+    # 存放连接人的信息
+    users = []
+    # 客户端建立连接后执行该方法
+    def open(self):
+        self.users.append(self)             # 添加用户信息
+        # print(self.users)
+        for user in self.users:
+            # 主动向客户端发送message消息，可是字符串或字典
+            # 如果binary(第二个参数)为False,则message会以UTF-8编码发送
+            user.write_message(u"[%s]登录了" %(self.request.remote_ip))
+
+    # 服务器主动关闭
+    def close(self, code: int = None, reason: str = None):
+        pass
+
+    # 客户端发送消息调用
+    def on_message(self, message):
+        for user in self.users:
+            # 主动向客户端发送message消息，可是字符串或字典
+            # 如果binary(第二个参数)为False,则message会以UTF-8编码发送
+            user.write_message(u"[%s]: %s" %(self.request.remote_ip, message))
+
+
+    # 客户端主动关闭后调用
+    def on_close(self):
+        self.users.remove(self)
+        for user in self.users:
+            # 主动向客户端发送message消息，可是字符串或字典
+            # 如果binary(第二个参数)为False,则message会以UTF-8编码发送
+            user.write_message(u"[%s]下线了" % (self.request.remote_ip))
+
+
+    # 判断是否同源，True为同源
+    def check_origin(self, origin: str):
+        return True
+
+
+

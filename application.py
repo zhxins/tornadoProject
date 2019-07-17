@@ -61,7 +61,11 @@ class Application(tornado.web.Application):
 
             (r'/loginNew', index.LoginNewHandler),
 
+            # 聊天界面
+            (r'/chatInit', index.ChatInitHandler),
 
+            # 聊天Handler
+            (r'/chat', index.ChatHandler),
 
 
             # staticFileHandler, 要放在所有路由的最下面
